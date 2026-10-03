@@ -19,7 +19,7 @@
             <form action="/predict" method="post">
                 <div class="form-group">
                     <label for="State_Name">State Name</label>
-                    <input type="text" class="form-control" name="State_Name" step="any" list="state-options"
+                    <input type="text" id="State_Name" class="form-control" name="State_Name" step="any" list="state-options"
                         placeholder="Enter state name " required
                         value="{{ request.form['State_Name'] if request.form.get('State_Name') else '' }}">
                     <datalist id="state-options">
@@ -60,7 +60,7 @@
                 </div>
                 <div class="form-group">
                     <label for="District_Name">District Name</label>
-                    <input type="text" class="form-control" name="District_Name" step="any" list="district-options"
+                    <input type="text" id="District_Name" class="form-control" name="District_Name" step="any" list="district-options"
                         placeholder="Enter district name" required
                         value="{{ request.form['District_Name'] if request.form.get('District_Name') else '' }}">
                     <datalist id="district-options">
@@ -443,8 +443,8 @@
                     
                 </div>
                 <div class="form-group">
-                    <label for="Area">Area</label>
-                    <input type="number" class="form-control" name="Area" step="any" placeholder="Enter area amount"
+                    <label for="Area">Area (in Acres)</label>
+                    <input type="number" class="form-control" name="Area" step="any" placeholder="Enter land area in Acres"
                         required value="{{ request.form['Area'] if request.form.get('Area') else '' }}">
                 </div>
                 <div class="form-group">

@@ -1,110 +1,120 @@
-# Indian Crop Yield Prediction Using Machine Learning
+# AgriSmart AI Pro - Indian Crop Yield & Plant Health Platform 🌾
 
-This repository contains a machine learning-based solution to predict crop yield in India, considering multiple input parameters. The project leverages a Random Forest Regressor model and includes an interactive and visually appealing website to enhance user experience.
+**AgriSmart AI Pro** is an advanced, end-to-end precision agritech platform built for Indian agriculture. It combines a Machine Learning Yield Prediction engine, APMC Mandi revenue valuation, a regional crop recommendation system, and a local **Ollama Vision AI Leaf Inspector** for plant disease diagnosis.
 
+All land area measurements are standardized in **Acres**, crop yield in **Tons/Acre**, and financial market valuations in **Indian Rupees (INR ₹)**.
 
-## Project Overview
+---
 
-Indian agriculture depends heavily on precise crop yield predictions. This project helps farmers, policymakers, and agricultural stakeholders make informed decisions by predicting crop yield based on key input parameters. 
+## 🚀 Key Features
 
-### Features:
-- **Extensive Data**: Covers all states and over 600 districts of India.
-- **User Inputs**: Crop Type, Season, Area, Crop Year, and more.
-- **Machine Learning**: Random Forest Regressor for accurate yield predictions.
-- **Dynamic Website**: A user-friendly interface featuring animations using GSAP and smooth scrolling powered by Lenis.
+### 1. 📊 ML Crop Yield Predictor
+- **Units**: Land Area in **Acres**, Yield in **Tons/Acre**, Revenue in **INR ₹**.
+- **Model**: Retrained Random Forest Regressor ($R^2 \approx 92.92\%$) trained on historical All-India crop production data.
+- **Agronomic Safety Controls**: Includes category-specific yield upper-bound caps (foodgrains, sugarcane, horticultural vegetables) and outlier filtering to prevent hyper-inflated or realistic forecast anomalies.
+- **Smart Two-Way Cascading Dropdowns**: Covers all 33 States and 646 Districts of India. Supports both State-first filtering and direct District-first selection with automatic State auto-detection.
 
+### 2. 🍃 AI Leaf Inspector (Vision LLM)
+- **Local Vision AI**: Powered by local Ollama Vision models (`llava` / `llama3.2-vision`) for private, offline plant health analysis.
+- **Computer Vision Relevance Check**: Automatically analyzes leaf image HSV foliage pigment ($\ge 12\%$ green/yellow/brown vegetation threshold) before invoking AI inference, rejecting non-leaf uploads with clear error guidance.
+- **Actionable Diagnosis**: Delivers detailed Markdown reports covering disease identification, severity assessment, organic remedies, chemical treatments, and preventative guidelines.
 
-## Tech Stack
+### 3. 💡 Optimal Regional Crop Recommender
+- Ranks top-performing crops for any Indian State, District, and Season (Kharif, Rabi, Summer, Whole Year, etc.) based on predicted yield (Tons/Acre) and APMC Mandi market valuation (INR ₹).
 
-### Backend:
-- **Machine Learning**: Random Forest Regressor
-- **Python Libraries**: Pandas, NumPy, Scikit-learn
+### 4. 💰 APMC Mandi Market Rates Directory
+- Contains market valuation rates (INR ₹ / Ton) covering 124 crop species.
+- Features dynamic client-side live search filtering.
 
-### Frontend:
-- **UI Enhancements**: GSAP for animations and Lenis for smooth scrolling
-- **Web Framework**: Flask
-- **HTML/CSS/JavaScript**: For responsive and dynamic user interface
+---
 
+## 🛠️ Tech Stack
 
-## How It Works
+- **Backend**: Python 3.12, Flask Framework
+- **Machine Learning**: Scikit-Learn (Random Forest Regressor), Joblib, Pandas, NumPy
+- **Computer Vision & AI**: OpenCV, Pillow (PIL), Ollama Vision API (`llava` / `llama3.2-vision`)
+- **Frontend**: HTML5, Tailwind CSS 3, FontAwesome 6, Google Fonts (*Plus Jakarta Sans* & *Space Grotesk*), Marked.js
+- **Testing**: Pytest automated test suite (100% test pass rate)
 
-1. **Input Parameters**: Users input crop type, season, area, crop year, and other relevant details.
-2. **Prediction Model**: The Random Forest Regressor processes the input and predicts the crop yield.
-3. **Output**: The predicted yield is displayed on the website in a clean and interactive format.
+---
 
+## 📐 Units & Standards
 
-## Highlights
+| Parameter | Unit | Symbol |
+| :--- | :--- | :--- |
+| **Land Area** | Acres | Acre |
+| **Crop Yield** | Tons per Acre | Tons/Acre |
+| **Total Production** | Metric Tons | Tons |
+| **Market Valuation** | Indian Rupees | INR ₹ |
+| **Mandi Price Rate** | Rupees per Ton | ₹ / Ton |
 
-- **Comprehensive Data**: A wide dataset ensures accurate predictions for different regions and conditions.
-- **Intuitive Design**: The website combines functionality with aesthetics for a seamless user experience.
-- **Dynamic Animations**: GSAP and Lenis make the interface engaging and modern.
+---
 
-
-## Setup Instructions
-
-1. Clone this repository:  
-   ```bash
-   git clone https://github.com/BhaveshBhakta/Crop-Yield-Prediction.git
-   cd Crop-Yield-Prediction
-   ```
-
-2. Install the required dependencies:  
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run the Flask app:  
-   ```bash
-   python app.py
-   ```
-
-4. Open the app in your browser at `http://127.0.0.1:5000/`.
-
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-📦 indian-crop-yield-prediction
-├── app.py                # Flask application
-├── static/               # Static files (CSS, JS, images)
-├── templates/            # HTML templates
-├── requirements.txt      # Python dependencies
-└── README.md             # Project documentation
+📦 Crop-Yield-Prediction-main
+├── app.py                     # Flask Web Server & API Routes
+├── model_engine.py            # Agritech ML & CV Engine Logic
+├── build_engine.py            # Data Cleaning, Model Training & Metadata Build Script
+├── model.joblib               # Trained Random Forest Regressor Model
+├── static/
+│   ├── metadata.json          # Crop, District, State & Mandi Rates Metadata
+│   ├── css/                   # Custom Stylesheets
+│   └── gallery/               # App Branding & Static Assets
+├── templates/
+│   ├── index.html             # Main AgriSmart AI Pro Dashboard (Tabs 1-4)
+│   └── predict.html           # Classic Prediction Form
+├── tests/
+│   └── test_app.py            # Pytest Automated Integration Tests
+├── India_Crop_Production.csv  # Historical All-India Agriculture Dataset
+├── requirements.txt           # Python Dependencies
+└── README.md                  # Project Documentation
 ```
 
+---
 
-## Dataset
+## ⚙️ Quick Start & Setup
 
-The dataset includes:
-- **State-level Data**: Comprehensive data for all Indian states.
-- **District-level Data**: Covers over 600 districts for granular analysis.
+### 1. Clone & Install Dependencies
+```bash
+git clone https://github.com/BhaveshBhakta/Crop-Yield-Prediction.git
+cd Crop-Yield-Prediction
+pip install -r requirements.txt
+```
 
-## Future Roadmap & Upcoming Features 🚀
+### 2. (Optional) Re-build ML Model & Metadata
+```bash
+python build_engine.py
+```
 
-### 1. 🍃 Local Ollama Vision LLM for Leaf Disease Detection
-- **Offline & Private AI**: Integrate local Ollama Vision models (e.g., `llama3.2-vision` or `llava`) to analyze uploaded crop leaf images.
-- **Automated Diagnosis & Remedies**: Provide instant plant disease diagnosis, severity assessment, organic & chemical remedies, and preventative guidelines directly from local AI inference without requiring external cloud API keys or internet connection.
+### 3. Run Automated Tests
+```bash
+python -m pytest
+```
 
-### 2. 🌤️ Real-Time Agrometeorology (Weather API Integration)
-- Fetch live precipitation, temperature, humidity, and solar radiation via Open-Meteo API.
+### 4. Start the Flask Application
+```bash
+python app.py
+```
+Open your browser at `http://127.0.0.1:5000/`.
 
-### 3. 💡 Smart Crop Optimization & Recommendation Engine
-- Recommend high-yield, drought-resistant crops based on district soil properties and climate forecasts.
+---
 
-### 4. 💰 Mandi APMC Live Market Price & Profitability Calculator
-- Connect with Agmarknet API to calculate estimated revenue and net profit per hectare.
+## 🔌 API Reference
 
-### 5. 🗣️ Multilingual Voice & AI Assistant
-- Provide voice-based guidance in Indian regional languages (Hindi, Marathi, Punjabi, Tamil, Telugu) for local farmers.
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `GET /` | `GET` | Main AgriSmart AI Pro Dashboard |
+| `POST /predict_yield` | `POST` | Calculates ML yield forecast (Tons/Acre), total production, and Mandi revenue (₹) |
+| `POST /recommend_crop` | `POST` | Ranks top optimal crops for a State, District & Season |
+| `POST /detect_disease` | `POST` | Analyzes uploaded leaf image and returns Vision AI health diagnosis |
+| `GET /api/states` | `GET` | Returns list of available Indian States |
+| `GET /api/districts/<state>` | `GET` | Returns list of districts for a given state |
+| `GET /api/crops/<state>/<district>` | `GET` | Returns crops cultivated in a given state & district |
+| `GET /api/mandi_prices` | `GET` | Returns APMC Mandi market valuation rates (₹/Ton) |
 
-## Contributing
-Contributions are welcome! Feel free to fork the repository, make improvements, and submit a pull request.
+---
 
-## Website Overview
-
-![Cypa](https://github.com/user-attachments/assets/6fe9421c-c27b-4028-9897-20e1fbf09b29)
-
-![Screenshot 2024-11-26 222147](https://github.com/user-attachments/assets/c50696b6-10e3-41cc-a83d-83bd9212c835)
-
-![Screenshot 2024-11-26 222210](https://github.com/user-attachments/assets/6e93cb8a-ab02-4102-8912-1e4067825d15)
-
+## 🤝 Contributing
+Contributions, bug reports, and feature requests are welcome! Feel free to fork the repository and submit a pull request.

@@ -3,13 +3,20 @@ from flask import Flask, request, jsonify, render_template
 from model_engine import AgritechEngine
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB Max Upload Limit
 engine = AgritechEngine()
 
 @app.route("/")
 def home():
     states = engine.get_states()
     seasons = engine.get_seasons()
-    return render_template("index.html", states=states, seasons=seasons)
+    all_districts = engine.get_all_districts()
+    district_to_state = engine.get_district_to_state_map()
+    return render_template("index.html", states=states, seasons=seasons, all_districts=all_districts, district_to_state=district_to_state)
+
+@app.route("/predict_page")
+def predict_page():
+    return render_template("predict.html")
 
 @app.route("/api/states", methods=["GET"])
 def api_states():
@@ -25,10 +32,15 @@ def api_crops(state, district):
     crops = engine.get_crops(state, district)
     return jsonify({"state": state, "district": district, "crops": crops})
 
+@app.route("/api/mandi_prices", methods=["GET"])
+def api_mandi_prices():
+    prices = engine.metadata.get("mandi_prices", {})
+    return jsonify({"status": "success", "mandi_prices": prices})
+
+@app.route("/predict", methods=["GET", "POST"])
 @app.route("/predict_yield", methods=["POST"])
 def predict_yield():
     try:
-        # Handle both JSON and form submissions
         if request.is_json:
             data = request.get_json()
         else:
@@ -41,14 +53,13 @@ def predict_yield():
         area_str = data.get("area") or data.get("Area")
         year_str = data.get("year") or data.get("Crop_Year", 2024)
 
-        # Input Validation
         if not all([state, district, season, crop, area_str]):
             return jsonify({"error": "Missing required fields: state, district, season, crop, and area are required."}), 400
 
         try:
             area = float(area_str)
             if area <= 0:
-                return jsonify({"error": "Area must be a positive number greater than 0."}), 400
+                return jsonify({"error": "Area must be a positive number of Acres greater than 0."}), 400
         except ValueError:
             return jsonify({"error": "Invalid Area value. Must be a numeric number."}), 400
 
@@ -58,6 +69,10 @@ def predict_yield():
             year = 2024
 
         result = engine.predict_yield(state, district, season, crop, area, year)
+
+        if request.path == "/predict" and not request.is_json:
+            return render_template("predict.html", prediction=f"{result['yield_per_acre']} Tons/Acre (Total: {result['total_production']} Tons, Mandi Rev: {result['formatted_revenue']})")
+
         return jsonify({"status": "success", "data": result})
 
     except Exception as e:

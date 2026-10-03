@@ -19,18 +19,6 @@
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
                         heading: ['Space Grotesk', 'sans-serif'],
-                    },
-                    colors: {
-                        agri: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            900: '#14532d',
-                            950: '#052e16',
-                        }
                     }
                 }
             }
@@ -38,16 +26,25 @@
     </script>
 
     <style>
+        select option {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
         .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
         .tab-active {
             background: linear-gradient(135deg, #16a34a 0%, #0d9488 100%);
             color: #ffffff !important;
             box-shadow: 0 10px 25px -5px rgba(22, 163, 74, 0.4);
+        }
+        .hero-banner-bg {
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.90)), url("{{ url_for('static', filename='gallery/hero_bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
         }
         .scanner-line {
             height: 3px;
@@ -67,9 +64,8 @@
     <header class="border-b border-emerald-500/20 bg-slate-950/90 sticky top-0 z-50 backdrop-blur-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-12 h-12 bg-gradient-to-tr from-emerald-600 to-teal-400 rounded-2xl flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-emerald-500/25">
-                    🌱
-                </div>
+                <!-- Custom App Brand Logo -->
+                <img src="{{ url_for('static', filename='gallery/logo.jpg') }}" alt="AgriSmart AI Logo" class="w-12 h-12 rounded-2xl border border-emerald-500/40 shadow-lg shadow-emerald-500/20 object-cover">
                 <div>
                     <span class="text-2xl font-bold font-heading tracking-tight bg-gradient-to-r from-emerald-400 via-teal-200 to-white bg-clip-text text-transparent">AgriSmart AI <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">PRO</span></span>
                     <p class="text-xs text-slate-400">Indian Agriculture Intelligence & Disease Inspector</p>
@@ -79,7 +75,7 @@
             <div class="flex items-center gap-3">
                 <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-300">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Ollama AI Ready</span>
+                    <span>Ollama AI Active</span>
                 </div>
             </div>
         </div>
@@ -88,12 +84,15 @@
     <!-- Main Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-        <!-- Hero Title Banner -->
-        <div class="text-center space-y-3">
-            <h1 class="text-3xl sm:text-5xl font-extrabold font-heading tracking-tight">
+        <!-- Hero Title Banner with Subtle Dark Background -->
+        <div class="hero-banner-bg p-8 sm:p-12 rounded-3xl border border-slate-800/80 shadow-2xl text-center space-y-4 relative overflow-hidden backdrop-blur-md">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold uppercase tracking-wider mb-2 shadow-lg backdrop-blur-sm">
+                🌾 Next-Gen Smart Agriculture Engine
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold font-heading tracking-tight leading-tight text-white drop-shadow-md">
                 Precision Agritech & <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">AI Leaf Inspector</span>
             </h1>
-            <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto drop-shadow">
                 Predict crop yield, calculate APMC Mandi revenues, recommend optimal regional crops, and detect leaf diseases with automatic image relevance validation.
             </p>
         </div>
@@ -140,8 +139,11 @@
 
                             <div>
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">District</label>
-                                <select id="district_select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" required disabled>
-                                    <option value="">-- Select State First --</option>
+                                <select id="district_select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" required>
+                                    <option value="">-- Select District (or Pick State Above) --</option>
+                                    {% for dist in all_districts %}
+                                    <option value="{{ dist }}">{{ dist }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
 
@@ -170,9 +172,9 @@
                             <div>
                                 <div class="flex items-center justify-between mb-1">
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">Land Area</label>
-                                    <span class="text-xs text-emerald-400 font-semibold">Unit: Hectares</span>
+                                    <span class="text-xs text-emerald-400 font-semibold">Unit: Acres</span>
                                 </div>
-                                <input type="number" step="any" id="area_input" placeholder="e.g. 5.0" min="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none" required>
+                                <input type="number" step="any" id="area_input" placeholder="e.g. 2.5 Acres" min="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none" required>
                             </div>
 
                             <button type="submit" id="btn-predict" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold py-4 px-6 rounded-xl transition shadow-lg shadow-emerald-900/40 flex items-center justify-center gap-2">
@@ -202,7 +204,7 @@
                                 <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Predicted Yield Rate</p>
                                 <div class="flex items-baseline gap-3 mt-1">
                                     <span id="res-yield" class="text-5xl font-extrabold font-heading text-white">0.00</span>
-                                    <span class="text-sm font-semibold text-emerald-400">Tons / Hectare</span>
+                                    <span class="text-sm font-semibold text-emerald-400">Tons / Acre</span>
                                 </div>
                             </div>
 
@@ -295,8 +297,11 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">District</label>
-                            <select id="rec_district" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none" required disabled>
-                                <option value="">-- Select District --</option>
+                            <select id="rec_district" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 outline-none" required>
+                                <option value="">-- Select District (or Pick State Above) --</option>
+                                {% for dist in all_districts %}
+                                <option value="{{ dist }}">{{ dist }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div>
@@ -321,11 +326,17 @@
             <!-- TAB 4: MANDI RATES -->
             <div id="tab-mandi" class="tab-content hidden">
                 <div class="bg-slate-900/90 p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6">
-                    <div>
-                        <h3 class="text-base font-bold font-heading text-emerald-400 flex items-center gap-2">
-                            <i class="fa-solid fa-indian-rupee-sign"></i> APMC Mandi Benchmark Rates
-                        </h3>
-                        <p class="text-xs text-slate-400 mt-1">Average market valuation rates used for financial revenue predictions (INR ₹ / Ton).</p>
+                    <div class="flex items-center justify-between flex-wrap gap-4 border-b border-slate-800 pb-4">
+                        <div>
+                            <h3 class="text-base font-bold font-heading text-emerald-400 flex items-center gap-2">
+                                <i class="fa-solid fa-indian-rupee-sign"></i> APMC Mandi Benchmark Rates
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Average market valuation rates used for financial revenue predictions (INR ₹ / Ton).</p>
+                        </div>
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-xs text-slate-500"></i>
+                            <input type="text" id="mandi-search-input" placeholder="Search crop rate..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none">
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="mandi-cards-container">
@@ -343,6 +354,9 @@
 
     <!-- Client-side Logic -->
     <script>
+        const DISTRICT_TO_STATE = {{ district_to_state | tojson }};
+        const ALL_DISTRICTS = {{ all_districts | tojson }};
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('tab-active'));
@@ -351,47 +365,98 @@
             document.getElementById(`btn-tab-${tabId}`).classList.add('tab-active');
         }
 
+        function resetDistrictSelect(distSelectId) {
+            const distSelect = document.getElementById(distSelectId);
+            let html = '<option value="">-- Select District (or Pick State Above) --</option>';
+            ALL_DISTRICTS.forEach(d => {
+                html += `<option value="${d}">${d}</option>`;
+            });
+            distSelect.innerHTML = html;
+            distSelect.disabled = false;
+        }
+
         // Predictor Cascading Dropdowns
         document.getElementById('state_select').addEventListener('change', function() {
             const state = this.value;
             const distSelect = document.getElementById('district_select');
             const cropSelect = document.getElementById('crop_select');
 
-            distSelect.innerHTML = '<option value="">Loading...</option>';
+            if (!state) {
+                resetDistrictSelect('district_select');
+                cropSelect.innerHTML = '<option value="">-- Select District First --</option>';
+                cropSelect.disabled = true;
+                return;
+            }
+
+            distSelect.innerHTML = '<option value="">Loading districts...</option>';
             distSelect.disabled = true;
-            cropSelect.innerHTML = '<option value="">Select District First</option>';
+            cropSelect.innerHTML = '<option value="">-- Select District First --</option>';
             cropSelect.disabled = true;
 
-            if (!state) return;
-
             fetch(`/api/districts/${encodeURIComponent(state)}`)
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed to fetch districts");
+                    return res.json();
+                })
                 .then(data => {
-                    distSelect.innerHTML = '<option value="">-- Select District --</option>';
-                    data.districts.forEach(d => {
-                        distSelect.innerHTML += `<option value="${d}">${d}</option>`;
-                    });
-                    distSelect.disabled = false;
+                    let html = '<option value="">-- Select District --</option>';
+                    if (data && Array.isArray(data.districts) && data.districts.length > 0) {
+                        data.districts.forEach(d => {
+                            html += `<option value="${d}">${d}</option>`;
+                        });
+                        distSelect.innerHTML = html;
+                        distSelect.disabled = false;
+                    } else {
+                        resetDistrictSelect('district_select');
+                    }
+                })
+                .catch(err => {
+                    console.error("Districts load error:", err);
+                    resetDistrictSelect('district_select');
                 });
         });
 
         document.getElementById('district_select').addEventListener('change', function() {
-            const state = document.getElementById('state_select').value;
+            let stateSelect = document.getElementById('state_select');
             const district = this.value;
             const cropSelect = document.getElementById('crop_select');
 
-            cropSelect.innerHTML = '<option value="">Loading...</option>';
+            if (!district) {
+                cropSelect.innerHTML = '<option value="">-- Select District First --</option>';
+                cropSelect.disabled = true;
+                return;
+            }
+
+            // Auto-select State if not already selected
+            if (!stateSelect.value && DISTRICT_TO_STATE[district]) {
+                stateSelect.value = DISTRICT_TO_STATE[district];
+            }
+
+            const state = stateSelect.value;
+            cropSelect.innerHTML = '<option value="">Loading crops...</option>';
             cropSelect.disabled = true;
 
-            if (!district) return;
-
             fetch(`/api/crops/${encodeURIComponent(state)}/${encodeURIComponent(district)}`)
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed to fetch crops");
+                    return res.json();
+                })
                 .then(data => {
+                    let html = '<option value="">-- Select Crop --</option>';
+                    if (data && Array.isArray(data.crops) && data.crops.length > 0) {
+                        data.crops.forEach(c => {
+                            html += `<option value="${c}">${c}</option>`;
+                        });
+                        cropSelect.innerHTML = html;
+                        cropSelect.disabled = false;
+                    } else {
+                        cropSelect.innerHTML = '<option value="">No crops found</option>';
+                        cropSelect.disabled = true;
+                    }
+                })
+                .catch(err => {
+                    console.error("Crops load error:", err);
                     cropSelect.innerHTML = '<option value="">-- Select Crop --</option>';
-                    data.crops.forEach(c => {
-                        cropSelect.innerHTML += `<option value="${c}">${c}</option>`;
-                    });
                     cropSelect.disabled = false;
                 });
         });
@@ -400,20 +465,44 @@
         document.getElementById('rec_state').addEventListener('change', function() {
             const state = this.value;
             const distSelect = document.getElementById('rec_district');
-            distSelect.innerHTML = '<option value="">Loading...</option>';
+
+            if (!state) {
+                resetDistrictSelect('rec_district');
+                return;
+            }
+
+            distSelect.innerHTML = '<option value="">Loading districts...</option>';
             distSelect.disabled = true;
 
-            if (!state) return;
-
             fetch(`/api/districts/${encodeURIComponent(state)}`)
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed to fetch districts");
+                    return res.json();
+                })
                 .then(data => {
-                    distSelect.innerHTML = '<option value="">-- Select District --</option>';
-                    data.districts.forEach(d => {
-                        distSelect.innerHTML += `<option value="${d}">${d}</option>`;
-                    });
-                    distSelect.disabled = false;
+                    let html = '<option value="">-- Select District --</option>';
+                    if (data && Array.isArray(data.districts) && data.districts.length > 0) {
+                        data.districts.forEach(d => {
+                            html += `<option value="${d}">${d}</option>`;
+                        });
+                        distSelect.innerHTML = html;
+                        distSelect.disabled = false;
+                    } else {
+                        resetDistrictSelect('rec_district');
+                    }
+                })
+                .catch(err => {
+                    console.error("Recommender districts load error:", err);
+                    resetDistrictSelect('rec_district');
                 });
+        });
+
+        document.getElementById('rec_district').addEventListener('change', function() {
+            let stateSelect = document.getElementById('rec_state');
+            const district = this.value;
+            if (district && !stateSelect.value && DISTRICT_TO_STATE[district]) {
+                stateSelect.value = DISTRICT_TO_STATE[district];
+            }
         });
 
         // Submit Yield Predictor
@@ -447,10 +536,19 @@
                     const resBox = document.getElementById('yield-result');
                     resBox.classList.remove('hidden');
 
-                    document.getElementById('res-yield').innerText = res.data.yield_per_hectare.toFixed(2);
+                    document.getElementById('res-yield').innerText = res.data.yield_per_acre.toFixed(2);
                     document.getElementById('res-production').innerText = `${res.data.total_production} Tons`;
                     document.getElementById('res-revenue').innerText = res.data.formatted_revenue;
-                    document.getElementById('res-badge').innerText = res.data.benchmark;
+
+                    const badge = document.getElementById('res-badge');
+                    badge.innerText = res.data.benchmark;
+                    if (res.data.benchmark_color === 'red') {
+                        badge.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40';
+                    } else if (res.data.benchmark_color === 'amber') {
+                        badge.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40';
+                    } else {
+                        badge.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+                    }
                 } else {
                     alert(res.error || 'Prediction failed');
                 }
@@ -465,6 +563,11 @@
         // Submit Recommendation Form
         document.getElementById('rec-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Ranking optimal regional crops...';
+            btn.disabled = true;
+
             const payload = {
                 state: document.getElementById('rec_state').value,
                 district: document.getElementById('rec_district').value,
@@ -482,6 +585,8 @@
             })
             .then(res => res.json())
             .then(res => {
+                btn.innerHTML = origText;
+                btn.disabled = false;
                 if (res.status === 'success') {
                     container.innerHTML = '';
                     res.recommendations.forEach((item, index) => {
@@ -491,17 +596,22 @@
                                     <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center border border-amber-500/30">#${index+1}</span>
                                     <div>
                                         <h4 class="font-bold text-slate-100 text-sm">${item.crop}</h4>
-                                        <p class="text-xs text-slate-400">Avg Yield: ${item.expected_yield} Tons/Ha</p>
+                                        <p class="text-xs text-slate-400">Avg Yield: ${item.expected_yield} Tons/Acre</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-sm font-bold text-emerald-400 block">${item.formatted_revenue} / Ha</span>
-                                    <span class="text-[10px] text-slate-500">Mandi Rate: ₹${item.mandi_price}/Ton</span>
+                                    <span class="text-sm font-bold text-emerald-400 block">${item.formatted_revenue} / Acre</span>
+                                    <span class="text-[10px] text-slate-500">Mandi Rate: ₹${item.mandi_price.toLocaleString()}/Ton</span>
                                 </div>
                             </div>
                         `;
                     });
                 }
+            })
+            .catch(() => {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+                container.innerHTML = '<p class="text-xs text-rose-400 text-center py-4">Failed to load crop recommendations.</p>';
             });
         });
 
@@ -563,23 +673,39 @@
             });
         });
 
-        // Load Mandi Reference Rates
-        const mandiRates = {
-            "Rice": 23000, "Wheat": 22750, "Cotton": 65000, "Sugarcane": 3150,
-            "Maize": 20900, "Groundnut": 63000, "Gram": 54000, "Soyabean": 46000,
-            "Potato": 15000, "Onion": 18000, "Mustard": 56500, "Jute": 50500
-        };
-        const mandiContainer = document.getElementById('mandi-cards-container');
-        Object.entries(mandiRates).forEach(([crop, price]) => {
-            mandiContainer.innerHTML += `
-                <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between">
-                    <div>
-                        <h4 class="font-bold text-slate-100 text-sm">${crop}</h4>
-                        <span class="text-[10px] text-slate-500 uppercase font-semibold">APMC Benchmark</span>
-                    </div>
-                    <span class="font-extrabold text-emerald-400 text-sm">₹ ${price.toLocaleString()}/Ton</span>
-                </div>
-            `;
+        // Dynamic Mandi Rates Loading & Search Filter
+        fetch('/api/mandi_prices')
+            .then(r => r.json())
+            .then(data => {
+                const mandiContainer = document.getElementById('mandi-cards-container');
+                mandiContainer.innerHTML = '';
+                const prices = data.mandi_prices || {};
+                Object.entries(prices).forEach(([crop, price]) => {
+                    mandiContainer.innerHTML += `
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between mandi-card">
+                            <div>
+                                <h4 class="font-bold text-slate-100 text-sm">${crop}</h4>
+                                <span class="text-[10px] text-slate-500 uppercase font-semibold">APMC Benchmark</span>
+                            </div>
+                            <span class="font-extrabold text-emerald-400 text-sm">₹ ${Number(price).toLocaleString()}/Ton</span>
+                        </div>
+                    `;
+                });
+            })
+            .catch(() => {
+                console.log("Could not fetch mandi rates API");
+            });
+
+        document.getElementById('mandi-search-input').addEventListener('input', function() {
+            const q = this.value.toLowerCase().trim();
+            document.querySelectorAll('#mandi-cards-container > div').forEach(card => {
+                const cropName = card.querySelector('h4').innerText.toLowerCase();
+                if (cropName.includes(q)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>
