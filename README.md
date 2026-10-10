@@ -21,7 +21,7 @@ All land area measurements are standardized in **Acres**, crop yields in **Tons 
 - **Smart Two-Way Cascading Selection**: Supports all **33 States** and **646 Districts** of India with bi-directional auto-completion (State-first filtering or District-first auto-detection of State).
 
 ### 2. 🍃 AI Leaf Inspector & Disease Diagnosis (Vision LLM)
-- **Local Vision AI**: Integrated with local Ollama Vision models (`llava`, `llama3.2-vision`) for 100% private, offline plant health analysis.
+- **Local Vision AI**: Integrated with local Ollama Vision models (`llava`, `llama3.2-vision`, `moondream`) for 100% private, offline plant health analysis.
 - **Computer Vision Foliage Check**: Uses OpenCV HSV color space analysis ($\ge 12\%$ green/yellow/brown vegetation ratio) to verify leaf content before model execution, filtering out non-foliage uploads with clear user guidance.
 - **Robust Heuristic Fallback**: Ensures uninterrupted service by providing visual leaf health diagnostics even when the local LLM server is offline.
 - **Actionable Agronomic Reports**: Delivers structured Markdown diagnostics detailing disease identity, infection severity, organic remedies, chemical treatments, and preventative field practices.
@@ -73,6 +73,76 @@ flowchart TD
 
 ---
 
+## 🦙 Ollama Vision AI Setup & Application Integration
+
+The **AI Leaf Inspector** feature supports local computer vision inference via **Ollama**. Running Ollama locally gives you 100% data privacy, zero API key dependencies, and completely free, unlimited plant pathology diagnostics.
+
+### 1. Installing Ollama
+
+#### 🔹 Windows & macOS
+1. Download the installer from the official website: [https://ollama.com/download](https://ollama.com/download)
+2. Run the installer executable and follow the setup wizard.
+3. Ollama will start automatically in your background menu/system tray.
+
+#### 🔹 Linux
+Run the official one-line installation command in your terminal:
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+---
+
+### 2. Starting the Ollama Service
+
+Ollama runs as a background service listening on `http://localhost:11434`.
+
+To manually verify or start the service from terminal/command prompt:
+```bash
+ollama serve
+```
+
+---
+
+### 3. Pulling Vision Models
+
+Open a terminal or command prompt and download a supported Vision LLM:
+
+- **Option A: Llama 3.2 Vision (Recommended - High Diagnostic Accuracy)**
+  ```bash
+  ollama pull llama3.2-vision
+  ```
+
+- **Option B: LLaVA (Alternative Vision Model)**
+  ```bash
+  ollama pull llava
+  ```
+
+- **Option C: Moondream (Lightweight for lower resource machines)**
+  ```bash
+  ollama pull moondream
+  ```
+
+---
+
+### 4. How the Application Auto-Connects to Ollama
+
+1. **Auto-Detection (`GET http://localhost:11434/api/tags`)**:
+   When an image is submitted to the `/detect_disease` endpoint, `model_engine.py` automatically checks if the Ollama service is active and lists all installed local models.
+
+2. **Smart Model Prioritization**:
+   The engine automatically selects the best available model in order of priority:
+   - Any model with `vision` in its name (e.g., `llama3.2-vision`).
+   - Any model with `llava` or `moondream`.
+   - Any model matching `llama3.2`.
+
+3. **Inference Execution (`POST http://localhost:11434/api/generate`)**:
+   The base64-encoded leaf image and expert pathodynamic prompt are sent to Ollama for structured diagnostic output.
+
+4. **Seamless Heuristic Fallback**:
+   If Ollama is not installed or offline, AgriSmart AI Pro automatically falls back to OpenCV HSV chlorophyll foliage analysis, ensuring the application remains 100% operational without crashing!
+
+---
+
 ## 🛠️ Machine Learning Model & Data Pipeline
 
 - **Dataset**: `India_Crop_Production.csv` (~14.6 MB) containing All-India historical crop production records.
@@ -89,7 +159,7 @@ flowchart TD
 
 - **Backend Framework**: Python 3.12, Flask 3.0.3, Gunicorn 23.0.0
 - **Machine Learning & Data**: Scikit-Learn 1.5.2, Pandas 2.2.3, NumPy, Joblib 1.4.2
-- **Computer Vision & Image AI**: OpenCV (`opencv-python`), Pillow (PIL), Requests (Ollama API)
+- **Computer Vision & Image AI**: OpenCV (`opencv-python`), Pillow (PIL), Requests (Ollama Vision API)
 - **Frontend UI**: HTML5, Tailwind CSS 3, FontAwesome 6, Marked.js (Markdown parsing), *Plus Jakarta Sans* & *Space Grotesk* typography
 - **Testing**: Pytest 7.4.4 automated test suite (100% test pass rate across 10 test modules)
 
@@ -124,7 +194,7 @@ flowchart TD
 ### 1. Prerequisites
 - **Python**: Version 3.9 or higher (Python 3.12 recommended)
 - **Git**
-- *(Optional)* **Ollama**: Installed locally with `llava` or `llama3.2-vision` pulled for local Vision AI features.
+- *(Optional)* **Ollama**: Installed locally with `llama3.2-vision` or `llava` for offline Vision AI features.
 
 ### 2. Environment Setup
 ```bash
